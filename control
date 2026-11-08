@@ -1,0 +1,9 @@
+Package: com.coteyka.tweaksection
+Name: TweakSection
+Version: 0.1.1
+Architecture: iphoneos-arm
+Description: Groups every tweak's settings pane under a single "Tweaks" entry in the Settings root list.
+Maintainer: coteyka
+Author: coteyka
+Section: Tweaks
+Depends: mobilesubstrate (>= 0.9.5000), preferenceloader, firmware (>= 6.0), firmware (<< 7.0)
