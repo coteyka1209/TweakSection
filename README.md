@@ -1,8 +1,8 @@
 # TweakSection
 
 **Groups every tweak's settings pane under a single "Cydia tweaks" entry in the iOS 6
-Settings root list** — the way iOS 7+ does it natively — instead of a dozen scattered
-rows.
+Settings root list** instead of a dozen scattered rows — the convenience modern
+jailbreaks take for granted, backported to iOS 6.
 
 | Before (stock) | After (TweakSection) |
 |---|---|
@@ -18,9 +18,9 @@ rows.
   directory-style entries alike) — nothing to update when you install another tweak.
 - Each pane inside behaves exactly like it did standalone (toggles persist through
   PSDefaultController, sub-pages push as usual).
-- The entry carries the **icon of the installed package manager** (Cydia, Sileo, Zebra,
-  Icy — first match wins), restyled into the era look: rounded corners, gloss, hairline
-  border. No icon sources found → the row renders without one. No new dependencies.
+- The entry carries the **Cydia app icon**, borrowed at runtime from
+  `/Applications/Cydia.app` (always present on a jailbroken iOS 6 device). No new
+  dependencies.
 
 ## Requirements
 
