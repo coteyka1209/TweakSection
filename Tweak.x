@@ -97,38 +97,6 @@ static UIImage *TSScaleIcon(UIImage *icon) {
     return out;
 }
 
-// Style a source icon into the iOS 6 Settings look: rounded corners, the classic
-// top-half gloss gradient and a subtle dark border. Works on any input icon, so a
-// modern flat package-manager logo still blends into the skeuomorphic list.
-static UIImage *TSStyleIcon(UIImage *icon) {
-    CGSize size = CGSizeMake(30, 30);
-    UIGraphicsBeginImageContextWithOptions(size, NO, 0);
-    CGContextRef ctx = UIGraphicsGetCurrentContext();
-
-    UIBezierPath *clip = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, size.width, size.height)
-                                                    cornerRadius:6.5];
-    [clip addClip];
-    [icon drawInRect:CGRectMake(0, 0, size.width, size.height)];
-
-    // gloss: white gradient over the top half, fading out downwards
-    CGContextSaveGState(ctx);
-    [clip addClip];
-    CGFloat comps[] = {1.0, 1.0, 1.0, 0.40, 1.0, 1.0, 1.0, 0.04};
-    CGGradientRef gloss = CGGradientCreateWithColorComponents(NULL, comps, NULL, 2);
-    CGContextDrawLinearGradient(ctx, gloss, CGPointMake(0, 0), CGPointMake(0, size.height / 2), 0);
-    CGGradientRelease(gloss);
-    CGContextRestoreGState(ctx);
-
-    // hairline border to match the pre-styled png icons of that era
-    CGContextSetStrokeColorWithColor(ctx, [UIColor colorWithWhite:0.0 alpha:0.30].CGColor);
-    [clip setLineWidth:1.0];
-    [clip stroke];
-
-    UIImage *out = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return out;
-}
-
 // The concrete Settings root controller (binary-only class; exists at runtime).
 @interface PrefsListController : PSListController
 - (NSMutableArray *)specifiers;
@@ -201,31 +169,19 @@ static UIImage *TSStyleIcon(UIImage *icon) {
                                                           cell:PSLinkCell
                                                           edit:nil];
 
-    // Row icon: borrow the installed package manager's own icon at runtime (no bundled
-    // assets, no new dependencies). Cydia.app ships the classic pre-styled iOS 6 icon
-    // (icon@2x.png / iconClassic.png — used as-is); other package managers ship flat
-    // modern logos, so those get the rounded+gloss treatment. Silently skipped when
-    // none exists. The specifier key is PSIconImageKey(@"iconImage") — @"icon" is a
-    // bundle-relative PATH key and does not accept UIImages.
-    NSArray *classicPaths = [NSArray arrayWithObjects:
+    // Row icon: borrow the Cydia app icon at runtime (on iOS 6 Cydia is the only
+    // package manager and is always present; silently skipped if it ever is not).
+    // The specifier key is PSIconImageKey(@"iconImage") — @"icon" is a bundle-relative
+    // PATH key and does not accept UIImages. icon@2x.png is the classic pre-styled
+    // iOS 6 icon (rounded corners + gloss baked in), only a row-size scale is needed.
+    NSArray *iconPaths = [NSArray arrayWithObjects:
         @"/Applications/Cydia.app/icon@2x.png",
         @"/Applications/Cydia.app/iconClassic.png",
         @"/Applications/Cydia.app/icon.png", nil];
-    NSArray *styledPaths = [NSArray arrayWithObjects:
-        @"/var/jb/Applications/Sileo.app/icon.png",
-        @"/Applications/Sileo.app/icon.png",
-        @"/Applications/Zebra.app/Icon-Small-40@2x.png",
-        @"/Applications/Icy.app/Icon.png", nil];
     UIImage *icon = nil;
-    for (NSString *p in classicPaths) {
+    for (NSString *p in iconPaths) {
         UIImage *img = [UIImage imageWithContentsOfFile:p];
         if (img) { icon = TSScaleIcon(img); break; }
-    }
-    if (!icon) {
-        for (NSString *p in styledPaths) {
-            UIImage *flat = [UIImage imageWithContentsOfFile:p];
-            if (flat) { icon = TSStyleIcon(flat); break; }
-        }
     }
     if (icon) [tweaks setProperty:icon forKey:PSIconImageKey];
 

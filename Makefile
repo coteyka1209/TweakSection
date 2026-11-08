@@ -16,7 +16,7 @@ TWEAK_NAME = TweakSection
 TweakSection_FILES = Tweak.x
 TweakSection_CFLAGS = -fobjc-arc
 TweakSection_LIBRARIES = substrate
-TweakSection_LDFLAGS = -framework UIKit -framework Foundation -framework CoreGraphics -framework Preferences
+TweakSection_LDFLAGS = -framework UIKit -framework Foundation -framework Preferences
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 
