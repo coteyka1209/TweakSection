@@ -4,6 +4,10 @@
 Settings root list** — the way iOS 7+ does it natively — instead of a dozen scattered
 rows.
 
+| Before (stock) | After (TweakSection) |
+|---|---|
+| ![stock](screenshots/before.png) | ![grouped](screenshots/after.png) |
+
 ## What it does
 
 - On iOS 6, every tweak with a PreferenceLoader plist adds its own row to the main
